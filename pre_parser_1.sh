@@ -29,6 +29,11 @@ strip_yaml_front_matter_and_preprocess() {
   !in_yaml { print }' | awk 'NF' | tr -s ' '
 }
 
+# repo.getmonero.org --> monero-repo.openenet.cn
+rewrite_monero_links() {
+  sed -E 's|repo\.getmonero\.org|monero-repo.openenet.cn|g'
+}
+
 # Function to check for YAML front matter
 has_yaml_front_matter() {
   awk '
@@ -51,7 +56,8 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Stripping YAML front matter from the merge request description..."
-MR_DESCRIPTION_CONTENT=$(echo "$MR_DESCRIPTION" | strip_yaml_front_matter_and_preprocess)
+
+MR_DESCRIPTION_CONTENT=$(echo "$MR_DESCRIPTION" | strip_yaml_front_matter_and_preprocess | rewrite_monero_links)
 
 if [ -z "$MR_DESCRIPTION_CONTENT" ]; then
   echo "Error: The merge request description is empty after stripping YAML front matter."
@@ -106,7 +112,8 @@ if ! has_yaml_front_matter <(convert_to_unix "$NEW_FILE"); then
 fi
 
 # Convert to Unix line endings before processing
-FILE_CONTENT=$(convert_to_unix "$NEW_FILE" | strip_yaml_front_matter_and_preprocess)
+FILE_CONTENT=$(convert_to_unix "$NEW_FILE" | strip_yaml_front_matter_and_preprocess | rewrite_monero_links)
+
 echo "Content of the Markdown file $NEW_FILE (after stripping YAML front matter):"
 echo "$FILE_CONTENT"
 
