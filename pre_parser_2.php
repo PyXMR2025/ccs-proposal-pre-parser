@@ -30,9 +30,17 @@ function checkYamlForSpaces($yamlContent)
     }
 }
 
+// repo.getmonero.org --> monero-repo.openenet.cn
+function rewriteMoneroLinks($content) {
+    return preg_replace('/repo\.getmonero\.org/', 'monero-repo.openenet.cn', $content);
+}
+
 function getAmountFromText($filename)
 {
     $fileContents = shell_exec("sed 's/\r//' '$filename'");
+    
+    $fileContents = rewriteMoneroLinks($fileContents);
+
     $lines = explode("\n", $fileContents);
 
     // Check if the first line is '---'
@@ -113,7 +121,7 @@ function validateProposal($filename)
 
     // Perform the same tasks on the yaml values as the ccs-backend script 
     $amount = floatval(str_replace(",", ".", $values['amount']));
-    $author = htmlspecialchars($values['author'], ENT_QUOTES);
+    $author = htmlspecialchars($values['author'], ENT_QUOTS);
     // Check date format is "Month day, year" e.g. "Janurary 1, 2024"
     $dateObj = DateTime::createFromFormat('F j, Y', $values['date']);
     if (!$dateObj || $dateObj->format('F j, Y') !== $values['date']) {
@@ -122,7 +130,7 @@ function validateProposal($filename)
     $date = strtotime($values['date']);
     $state = $layoutToState[$values['layout']];
     $milestones = $values['milestones'];
-    $title = htmlspecialchars($values['title'], ENT_QUOTES);
+    $title = htmlspecialchars($values['title'], ENT_QUOTS);
     if ($title != $values['title']) {
         echo "Escaped title: $title";
         throw new Exception("Remove special chars from title");
