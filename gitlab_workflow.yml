@@ -3,6 +3,19 @@ pre_parser_v1.1.9.1:
     stage: deploy
     script: 
         - |
+          # HTTP/HTTPS
+          export HTTP_PROXY=http://10.128.1.4:7899
+          export HTTPS_PROXY=http://10.128.1.4:7899
+          export http_proxy=http://10.128.1.4:7899
+          export https_proxy=http://10.128.1.4:7899
+          # SOCKS5
+          export SOCKS_PROXY=socks5://10.128.1.4:7898
+          export ALL_PROXY=socks5://10.128.1.4:7898
+          # git
+          git config --global http.proxy http://10.128.1.4:7899
+          git config --global https.proxy http://10.128.1.4:7899
+          # ============================================================================
+          
           apt-get -qq update && 
           apt-get install -y jq && 
           apt-get install git -yqq && 
@@ -20,8 +33,8 @@ pre_parser_v1.1.9.1:
           #    #exit 1
           #fi &&
           #download pre_parser_1.sh and pre_parser_2.php
-          wget https://raw.githubusercontent.com/PyXMR2025/ccs-proposal-pre-parser/refs/heads/main/pre_parser_1.sh
-          wget https://raw.githubusercontent.com/PyXMR2025/ccs-proposal-pre-parser/refs/heads/main/pre_parser_2.php
+          wget https://raw.githubusercontent.com/plowsof/ccs-proposal-pre-parser/3f2f73ba05a020f0c94c2b37c3f4e8050de58586/pre_parser_1.sh
+          wget https://raw.githubusercontent.com/plowsof/ccs-proposal-pre-parser/a240380a096ddd558bfc365506d8529299fb03f3/pre_parser_2.php
           chmod +x pre_parser_1.sh && 
           ./pre_parser_1.sh
     rules:
